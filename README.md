@@ -110,4 +110,47 @@
 
    - 由局部性原理知，Cache中存有大概率使用的数据与指令，供CPU在一段时间内直接使用（而非调用存储器中的数据），从而提高访问速度
 
-## 
+## 代码优化
+
+这里我们考虑一个简单的求和
+
+```c
+#include<stdio.h>
+int main()
+{
+	int a[100],n,sum;
+	scanf("%d",&n);
+	for(int i=1;i<=n;i++){
+		scanf("%d",&a[i]);
+		sum+=a[i];
+	}
+	printf("%d",sum);
+	return 0;
+}
+```
+
+然而目前的程序有以下两个不足：
+
+1. 若n>100，此时n已大于数组空间，会发生栈溢出
+2. 若n较小（比如n等于2，3），此时会浪费较大的空间
+
+这里我们考虑用``malloc()``函数动态申请内存空间，从而解决上述两个存在的不足
+
+```c
+#include<stdio.h>
+#include<stdlib.h>
+int main()
+{
+	int sum,n;
+	scanf("%d",&n);
+	for(int i=1;i<=n;i++){
+		int* p=(int*)malloc(sizeof(int));
+		scanf("%d",p);
+		sum+=*p;
+		free(p);
+	}
+	printf("%d",sum);
+	return 0;
+} 
+```
+
